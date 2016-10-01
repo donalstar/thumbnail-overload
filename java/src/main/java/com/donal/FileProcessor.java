@@ -1,4 +1,7 @@
-package main.java;
+package com.donal;
+
+import com.donal.model.Resolution;
+import com.donal.model.Result;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -10,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,11 +35,15 @@ public class FileProcessor {
     private Map<Dimension, java.util.List<String>> map = new HashMap<Dimension, java.util.List<String>>();
 
     /**
+     * Read the contents of the passed file (from the local file system or from the web depending on the
+     * type parameter)
+     * If loadFileFromWeb=true, determine image resolution by loading the image file (very slow!)
+     *
      * @param fileName
      * @param type
      * @param loadFileFromWeb
      */
-    public void processFile(String fileName, boolean type, boolean loadFileFromWeb) {
+    public Result processFile(String fileName, boolean type, boolean loadFileFromWeb) {
 
         try {
             BufferedReader bufferedReader = loadFile(fileName, type);
@@ -56,9 +64,35 @@ public class FileProcessor {
         } catch (IOException ioe) {
             System.err.println("Error " + ioe);
         }
+
+        return getResult();
     }
 
     /**
+     * @return
+     */
+    private Result getResult() {
+        Result result = new Result();
+
+        List<Resolution> resolutions = new ArrayList<Resolution>();
+
+        for (Dimension dim : map.keySet()) {
+            Resolution resolution = new Resolution();
+
+            resolution.setCount(map.get(dim).size());
+            resolution.setValue(printDimension(dim));
+
+            resolutions.add(resolution);
+        }
+
+        result.setResolutions(resolutions);
+
+        return result;
+    }
+
+    /**
+     * Load the file from file system/web
+     *
      * @param fileName
      * @param type
      * @return
@@ -109,6 +143,7 @@ public class FileProcessor {
 
     /**
      * Get image dimensions (by loading image from web)  & add to map of dimensions <-> list of image locations
+     * (slow!)
      *
      * @param imageLocation
      * @throws IOException
@@ -120,6 +155,9 @@ public class FileProcessor {
     }
 
     /**
+     * Add the image file name to a list of file names associated with the resolution dim (stored in a
+     * hashmap)
+     *
      * @param name
      * @param dim
      */
