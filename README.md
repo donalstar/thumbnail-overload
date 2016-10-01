@@ -25,6 +25,6 @@ I was a bit concerned that, if you dont have the correct JDK/JRE installed, you 
 
 ### To test the web app installed on AWS:
 
-* From your browser, go to: ``http://thumbnail-overload.s3-website-us-east-1.amazonaws.com/``
+* From your browser, go to: http://thumbnail-overload.s3-website-us-east-1.amazonaws.com/
 * In the entry field, type in the location for an images file _(e.g. http://paloalto.therooster.co/static/fun-rooster-thumbnail-names.txt)_
 * Press ""process" -- you should see the results on the page
