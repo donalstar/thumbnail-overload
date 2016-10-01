@@ -13,3 +13,5 @@
 * cd ``/bin``
 * ``process_thumbnails.sh -f thumbnails-test.txt`` (parses local test file)
 * ``process_thumbnails.sh -u http://paloalto.therooster.co/static/fun-rooster-thumbnail-names.txt`` (loads list of image files from the web)
+
+_(Program has been tested using Java JRE v 1.8)_
