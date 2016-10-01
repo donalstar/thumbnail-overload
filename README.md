@@ -8,4 +8,8 @@
   * Saves image file names, by resolution, in a map
   * Provides print method to allow report of resolution frequencies to be output
 
-* To Run:
+## To Run:
+
+* cd /bin
+* ``process_thumbnails.sh -f thumbnails-test.txt`` (parses local test file)
+* ``process_thumbnails.sh -u http://paloalto.therooster.co/static/fun-rooster-thumbnail-names.txt`` loads list of image files from the web
