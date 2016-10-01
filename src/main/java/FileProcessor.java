@@ -6,8 +6,11 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +20,9 @@ import java.util.regex.Pattern;
  */
 public class FileProcessor {
 
+    public static final boolean TYPE_FILE = false;
+    public static final boolean TYPE_URL = true;
+
     private static final String PATTERN = "(.*)\\.(.*)x(.*)_(.*)_(.*)_(.*)\\.(.*)";
 
     private static final Pattern REGEX_PATTERN = Pattern.compile(PATTERN);
@@ -24,20 +30,19 @@ public class FileProcessor {
 
     private Map<Dimension, java.util.List<String>> map = new HashMap<Dimension, java.util.List<String>>();
 
-    public void processFile(String fileName, boolean loadFileFromWeb) {
+    /**
+     * @param fileName
+     * @param type
+     * @param loadFileFromWeb
+     */
+    public void processFile(String fileName, boolean type, boolean loadFileFromWeb) {
 
         try {
-            FileReader reader = new FileReader(fileName);
-
-            BufferedReader bufferedReader = new BufferedReader(reader);
+            BufferedReader bufferedReader = loadFile(fileName, type);
 
             String line;
 
-            int count = 0;
-
             while ((line = bufferedReader.readLine()) != null) {
-                count++;
-
                 if (loadFileFromWeb) {
                     try {
                         processImageName(line);
@@ -47,19 +52,32 @@ public class FileProcessor {
                 } else {
                     processImageName(line);
                 }
-
-                System.out.print(".");
-
-                if (count % 150 == 0) {
-                    System.out.println("");
-                }
-
             }
-
-
         } catch (IOException ioe) {
             System.err.println("Error " + ioe);
         }
+    }
+
+    /**
+     * @param fileName
+     * @param type
+     * @return
+     * @throws IOException
+     */
+    private BufferedReader loadFile(String fileName, boolean type) throws IOException {
+        BufferedReader bufferedReader;
+
+        if (type == TYPE_URL) {
+            URL url = new URL(fileName);
+
+            bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+        } else {
+            FileReader reader = new FileReader(fileName);
+
+            bufferedReader = new BufferedReader(reader);
+        }
+
+        return bufferedReader;
     }
 
     /**
